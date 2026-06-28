@@ -236,6 +236,7 @@ nav {
   width: 100%; height: 100%;
   object-fit: cover; object-position: top;
   display: block;
+  flex: 1 1 0; min-height: 0;
 }
 .artist-duo-names {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -1611,9 +1612,23 @@ nav {
 
   <!-- Hotel 1 -->
   <div class="hotel-card reveal">
-    <div class="hotel-img-placeholder" style="grid-column:1/-1;aspect-ratio:auto;height:240px;">
-      <div class="ph-icon">🏨</div>
-      St. Raphael Resort · תמונות יתווספו
+    <div class="hotel-slider-wrap" id="slider-straphael">
+      <div class="hotel-slider-track" id="track-straphael">
+      <img src="https://www.straphael.com/assets/image/imageoriginal/1%20STR%20Admiral.jpg" alt="St. Raphael Resort 1" class="hotel-slide" loading="lazy">
+      <img src="https://www.cyprusparadise.com/media/12202/5-straphael-hotel-view.jpg?anchor=center&mode=crop&width=1090&height=727&rnd=132134521830000000&quality=30" alt="St. Raphael Resort 2" class="hotel-slide" loading="lazy">
+      <img src="https://images.trvl-media.com/lodging/1000000/450000/445200/445187/5f2b7292.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill" alt="St. Raphael Resort 3" class="hotel-slide" loading="lazy">
+      <img src="https://www.cyprusparadise.com/media/12203/6-straphael-hotel-swimming-pool.jpg?center=0.50306748466257667,0.49794238683127573&mode=crop&width=1090&height=727&rnd=132134521690000000&quality=30" alt="St. Raphael Resort 4" class="hotel-slide" loading="lazy">
+      <img src="https://content.r9cdn.net/rimg/himg/3f/02/4e/leonardo-133001818-47259Reception_O-284766.jpg?crop=true&width=500&height=350" alt="St. Raphael Resort 5" class="hotel-slide" loading="lazy">
+      </div>
+      <button class="slider-btn slider-btn-prev" onclick="sliderPrev('straphael')">&#8250;</button>
+      <button class="slider-btn slider-btn-next" onclick="sliderNext('straphael')">&#8249;</button>
+      <div class="slider-dots" id="dots-straphael">
+      <div class="slider-dot active" onclick="sliderGoTo('straphael',0)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('straphael',1)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('straphael',2)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('straphael',3)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('straphael',4)"></div>
+      </div>
     </div>
   </div>
   <div class="hotel-card reveal d1" style="margin-top:0;">
@@ -1626,9 +1641,23 @@ nav {
 
   <!-- Hotel 2 -->
   <div class="hotel-card reveal d1" style="margin-top:24px;">
-    <div class="hotel-img-placeholder" style="grid-column:1/-1;aspect-ratio:auto;height:240px;">
-      <div class="ph-icon">🏨</div>
-      City of Dreams Mediterranean · תמונות יתווספו
+    <div class="hotel-slider-wrap" id="slider-cityofdreams">
+      <div class="hotel-slider-track" id="track-cityofdreams">
+      <img src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/520785446.jpg?k=8ee5b506d5b9998caf19efd402544760b58a457c8847f46ed9829a39e0b767ef&o=" alt="City of Dreams Mediterranean 1" class="hotel-slide" loading="lazy">
+      <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/76/64/67/city-of-dreams-mediterranean.jpg?w=900&h=500&s=1" alt="City of Dreams Mediterranean 2" class="hotel-slide" loading="lazy">
+      <img src="https://images.trvl-media.com/lodging/74000000/73420000/73411800/73411799/1af5f133.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill" alt="City of Dreams Mediterranean 3" class="hotel-slide" loading="lazy">
+      <img src="https://ml.globenewswire.com/Resource/Download/66ce2267-edf0-4275-a13f-c8828a11847c" alt="City of Dreams Mediterranean 4" class="hotel-slide" loading="lazy">
+      <img src="https://www.melco-group.com/en/images/med1.jpg" alt="City of Dreams Mediterranean 5" class="hotel-slide" loading="lazy">
+      </div>
+      <button class="slider-btn slider-btn-prev" onclick="sliderPrev('cityofdreams')">&#8250;</button>
+      <button class="slider-btn slider-btn-next" onclick="sliderNext('cityofdreams')">&#8249;</button>
+      <div class="slider-dots" id="dots-cityofdreams">
+      <div class="slider-dot active" onclick="sliderGoTo('cityofdreams',0)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('cityofdreams',1)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('cityofdreams',2)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('cityofdreams',3)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('cityofdreams',4)"></div>
+      </div>
     </div>
   </div>
   <div class="hotel-card reveal d1" style="margin-top:0;">
@@ -1691,26 +1720,32 @@ nav {
   </div>
 
   <!-- SLIDE: אירוע ערב -->
-  <div class="attr-fullwidth" style="background:linear-gradient(160deg,#02110f,#06231f 30%,#0a2e28 55%,#05201b 80%,#02110f);">
-    <div class="attr-ov" style="background:radial-gradient(ellipse at 50% 30%,rgba(0,200,170,.25),transparent 55%),radial-gradient(ellipse at 70% 20%,rgba(255,196,84,.12),transparent 50%);"></div>
-    <div class="attr-info-block">
-      <span class="attr-lbl">קפריסין · יום 1 · 21:00</span>
-      <h2 class="attr-h-new" style="background:linear-gradient(90deg,#19e3c4,#ffd27f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">אירוע ערב — מופע מרכזי ודיג׳יי</h2>
-      <p class="attr-desc-new">ערב פתיחה סוחף על חוף הים: מופע מרכזי של אמן מוביל ומסיבת דיג׳יי תחת כיפת השמיים. <strong style="color:#7fffe6">אותם אמנים שהוצעו בארץ</strong> — ראו את מגוון ההפקות המוזיקליות בסקשן Live Shows.</p>
-    </div>
-    <div class="attr-img-placeholder" style="aspect-ratio:21/9;margin:8px 60px 60px;border-radius:18px;border-color:rgba(0,200,180,.25);">
-      <div class="ph-icon">🎤</div>
-      שקף אירוע ערב · תמונה תיווצר ותוטמע
+  <div class="attr-fullwidth" style="background:#02110f;">
+    <div style="position:relative;">
+      <img src="firefly_images/cyprus_evening.png" alt="קפריסין · אירוע ערב" style="width:100%;max-height:680px;object-fit:cover;object-position:center;display:block;">
+      <div class="attr-top-overlay"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;">
+        <div style="background:rgba(2,17,15,.62);backdrop-filter:blur(5px);border:1px solid rgba(0,200,180,.22);border-radius:18px;padding:34px 40px;margin:0 clamp(20px,5vw,60px);max-width:min(680px,86vw);direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,.4);">
+          <span class="attr-lbl">קפריסין · יום 1 · 21:00</span>
+          <h2 class="attr-h-new" style="background:linear-gradient(90deg,#19e3c4,#ffd27f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">אירוע ערב — מופע מרכזי ודיג׳יי</h2>
+          <p class="attr-desc-new">ערב פתיחה סוחף על חוף הים: מופע מרכזי של אמן מוביל ומסיבת דיג׳יי תחת כיפת השמיים. <strong style="color:#7fffe6">אותם אמנים שהוצעו בארץ</strong> — ראו את מגוון ההפקות המוזיקליות בסקשן Live Shows.</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- SLIDE: פעילות כוכב -->
-  <div class="attr-fullwidth" style="background:linear-gradient(160deg,#0d0a02,#1c1606 30%,#2a2008 55%,#1a1404 80%,#0d0a02);">
-    <div class="attr-ov" style="background:radial-gradient(ellipse at 40% 50%,rgba(255,196,84,.2),transparent 55%),radial-gradient(ellipse at 70% 20%,rgba(0,200,170,.1),transparent 50%);"></div>
-    <div class="attr-info-block">
-      <span class="attr-lbl">קפריסין · יום 2 · 09:30</span>
-      <h2 class="attr-h-new" style="background:linear-gradient(90deg,#ffd27f,#19e3c4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">פעילות כוכב</h2>
-      <p class="attr-desc-new">יום של הרפתקה וחוויה באזור הרי הטרודוס — שילוב של אקשן, טעמים ואווירה, עם ארוחת צהריים בלב הטבע.</p>
+  <div class="attr-fullwidth" style="background:#0d0a02;">
+    <div style="position:relative;">
+      <img src="firefly_images/cyprus_star.png" alt="קפריסין · פעילות כוכב" style="width:100%;max-height:680px;object-fit:cover;object-position:center;display:block;">
+      <div class="attr-top-overlay"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;">
+        <div style="background:rgba(13,10,2,.6);backdrop-filter:blur(5px);border:1px solid rgba(255,196,84,.22);border-radius:18px;padding:34px 40px;margin:0 clamp(20px,5vw,60px);max-width:min(680px,86vw);direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,.4);">
+          <span class="attr-lbl">קפריסין · יום 2 · 09:30</span>
+          <h2 class="attr-h-new" style="background:linear-gradient(90deg,#ffd27f,#19e3c4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">פעילות כוכב</h2>
+          <p class="attr-desc-new">יום של הרפתקה וחוויה באזור הרי הטרודוס — שילוב של אקשן, טעמים ואווירה, עם ארוחת צהריים בלב הטבע.</p>
+        </div>
+      </div>
     </div>
     <div class="cyprus-activity-grid reveal">
       <div class="cyprus-activity-card">
@@ -1729,23 +1764,20 @@ nav {
         <p>לומדים להכין קוקטיילים בהדרכת מומחים, באווירה קלילה ומשוחררת.</p>
       </div>
     </div>
-    <div class="attr-img-placeholder" style="aspect-ratio:21/9;margin:28px 60px 60px;border-radius:18px;border-color:rgba(255,196,84,.25);">
-      <div class="ph-icon">🌄</div>
-      שקף פעילות כוכב · תמונה תיווצר ותוטמע
-    </div>
   </div>
 
   <!-- SLIDE: LOOK & FEEL -->
-  <div class="attr-fullwidth" style="background:linear-gradient(160deg,#02110f,#071f1c 35%,#03130f 100%);">
-    <div class="attr-ov" style="background:radial-gradient(ellipse at 50% 40%,rgba(0,200,180,.18),transparent 55%),radial-gradient(ellipse at 30% 80%,rgba(255,196,84,.1),transparent 50%);"></div>
-    <div class="attr-info-block">
-      <span class="attr-lbl">קפריסין · אווירה ועיצוב</span>
-      <h2 class="attr-h-new"><span class="cyprus-title-grad">LOOK &amp; FEEL</span></h2>
-      <p class="attr-desc-new">שפה ויזואלית של ים תיכון קייצי — טורקיז, זהב וחול, אור טבעי ואווירת חופש. לוח השראה שמגדיר את המראה והתחושה של האירוע בקפריסין.</p>
-    </div>
-    <div class="attr-img-placeholder" style="aspect-ratio:21/9;margin:8px 60px 70px;border-radius:18px;border-color:rgba(0,200,180,.25);">
-      <div class="ph-icon">🎨</div>
-      שקף LOOK &amp; FEEL · תמונה תיווצר ותוטמע
+  <div class="attr-fullwidth" style="background:#02110f;">
+    <div style="position:relative;">
+      <img src="firefly_images/cyprus_lookfeel.png" alt="קפריסין · LOOK & FEEL" style="width:100%;max-height:720px;object-fit:cover;object-position:center;display:block;">
+      <div class="attr-top-overlay"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;">
+        <div style="background:rgba(2,17,15,.6);backdrop-filter:blur(5px);border:1px solid rgba(0,200,180,.22);border-radius:18px;padding:34px 40px;margin:0 clamp(20px,5vw,60px);max-width:min(680px,86vw);direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,.4);">
+          <span class="attr-lbl">קפריסין · אווירה ועיצוב</span>
+          <h2 class="attr-h-new"><span class="cyprus-title-grad">LOOK &amp; FEEL</span></h2>
+          <p class="attr-desc-new">שפה ויזואלית של ים תיכון קייצי — טורקיז, זהב וחול, אור טבעי ואווירת חופש. לוח השראה שמגדיר את המראה והתחושה של האירוע בקפריסין.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2083,6 +2115,8 @@ window.addEventListener('load', () => {
   sliderInit('nevo', 7);
   sliderInit('naga', 8);
   sliderInit('kineret', 6);
+  sliderInit('straphael', 5);
+  sliderInit('cityofdreams', 5);
 });
 
 
@@ -2111,6 +2145,32 @@ function switchShow(type) {
 // ── SCROLL REVEAL ──
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ── KEYBOARD SECTION NAVIGATION (for presentation) ──
+// ArrowDown / PageDown → next part · ArrowUp / PageUp → previous part
+const NAV_OFFSET = 70; // fixed nav height
+function snapTargets(){
+  return [...document.querySelectorAll('#hero,#campaign,.location-header,.hotel-card,.schedule-strip,.attr-fullwidth,#artists,#closing')];
+}
+function absTop(el){ return el.getBoundingClientRect().top + window.scrollY; }
+function currentSnapIndex(els){
+  const y = window.scrollY + NAV_OFFSET + 8;
+  let idx = 0;
+  els.forEach((el,i)=>{ if(absTop(el) <= y) idx = i; });
+  return idx;
+}
+function snapTo(dir){
+  const els = snapTargets();
+  if(!els.length) return;
+  let idx = currentSnapIndex(els) + dir;
+  idx = Math.max(0, Math.min(els.length-1, idx));
+  window.scrollTo({ top: Math.max(0, absTop(els[idx]) - NAV_OFFSET), behavior:'smooth' });
+}
+document.addEventListener('keydown', e=>{
+  if(e.target && e.target.matches && e.target.matches('input,textarea,select')) return;
+  if(e.key==='ArrowDown' || e.key==='PageDown'){ e.preventDefault(); snapTo(1); }
+  else if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); snapTo(-1); }
+});
 </script>
 </body>
 </html>
