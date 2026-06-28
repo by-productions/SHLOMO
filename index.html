@@ -766,6 +766,44 @@ nav {
   .artists-grid{gap:20px}
   .artist-img-placeholder{width:120px;height:120px}
 }
+
+/* ── CYPRUS / OVERSEAS ── */
+.cyprus-wrap {
+  position:relative; z-index:1;
+  border-top:1px solid rgba(0,200,180,.22);
+  background:
+    radial-gradient(ellipse at 18% 0%,rgba(0,190,170,.12),transparent 55%),
+    radial-gradient(ellipse at 82% 28%,rgba(255,196,84,.09),transparent 55%),
+    linear-gradient(180deg,#02110f 0%,#042420 45%,#03130f 100%);
+}
+.intl-badge {
+  display:inline-flex; align-items:center; gap:10px;
+  padding:9px 24px; border-radius:30px;
+  background:linear-gradient(90deg,rgba(0,200,180,.2),rgba(255,196,84,.2));
+  border:1px solid rgba(0,210,180,.45);
+  font-size:.72rem; letter-spacing:.3em; text-transform:uppercase;
+  color:#7fffe6; margin-bottom:22px;
+  box-shadow:0 0 28px rgba(0,200,180,.2);
+}
+.cyprus-title-grad {
+  background:linear-gradient(90deg,#19e3c4,#7fffe6 42%,#ffd27f);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.cyprus-wrap .hotel-meta-item .meta-val,
+.cyprus-wrap .hotel-stars { color:#19e3c4; }
+.cyprus-activity-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  max-width:1100px; margin:32px auto 0; padding:0 60px; direction:rtl;
+}
+.cyprus-activity-card {
+  background:linear-gradient(160deg,rgba(0,40,36,.6),rgba(4,18,16,.85));
+  border:1px solid rgba(0,200,180,.22); border-radius:18px; padding:30px 26px;
+  text-align:center;
+}
+.cyprus-activity-card .ca-icon { font-size:2.4rem; margin-bottom:14px; }
+.cyprus-activity-card h4 { font-size:1.3rem; color:#7fffe6; margin-bottom:10px; }
+.cyprus-activity-card p { font-size:1rem; line-height:1.8; color:rgba(220,245,240,.72); }
+@media(max-width:768px){ .cyprus-activity-grid{grid-template-columns:1fr;padding:0 24px;} }
 </style>
 </head>
 <body>
@@ -786,6 +824,7 @@ nav {
     <li><a href="#kineret">כנרת</a></li>
     <li><a href="#eilat">אילת</a></li>
     <li><a href="#deadsea">ים המלח</a></li>
+    <li><a href="#cyprus">קפריסין ✈</a></li>
     <li><a href="#artists">Live Shows</a></li>
   </ul>
   <button class="nav-hamburger" onclick="toggleMenu()" aria-label="תפריט">&#9776;</button>
@@ -796,6 +835,7 @@ nav {
   <a href="#kineret" onclick="toggleMenu()">כנרת</a>
   <a href="#eilat" onclick="toggleMenu()">אילת</a>
   <a href="#deadsea" onclick="toggleMenu()">ים המלח</a>
+  <a href="#cyprus" onclick="toggleMenu()">קפריסין ✈</a>
   <a href="#artists" onclick="toggleMenu()">Live Shows</a>
 </div>
 
@@ -1254,11 +1294,37 @@ nav {
     </div>
   </div>
 
-  <div class="hotel-card reveal d1" style="margin-top:0;">
+  <div style="padding:8px 0 4px 60px;max-width:1100px;margin:0 auto;direction:rtl;font-size:.7rem;letter-spacing:.15em;color:rgba(255,138,31,.6);text-transform:uppercase;">▲ מלון נבל דוד גליל ריזורט</div>
+
+  <div class="hotel-card reveal" style="margin-top:8px;">
+    <div class="hotel-slider-wrap" id="slider-goma">
+      <div class="hotel-slider-track" id="track-goma">
+      <img src="https://res.cloudinary.com/hotels-co-il/image/upload/q_auto/f_auto/c_fill,w_500/v1640252906/gome/37.webp" alt="מלון גומא 1" class="hotel-slide" loading="lazy">
+      <img src="https://www.isrotel.co.il/media/27147/29.jpg?anchor=center&mode=crop&width=243&height=180&rnd=134116588120000000" alt="מלון גומא 2" class="hotel-slide" loading="lazy">
+      <img src="https://h-north.co.il/wp-content/uploads/2025/03/%D7%9E%D7%9C%D7%95%D7%9F-%D7%92%D7%95%D7%9E%D7%90.jpeg" alt="מלון גומא 3" class="hotel-slide" loading="lazy">
+      <img src="https://www.isrotel.co.il/media/34264/peled-studios-gomeh-hotel-180-hdr-copy.jpg?width=374&height=250&mode=max" alt="מלון גומא 4" class="hotel-slide" loading="lazy">
+      <img src="https://www.isrotel.co.il/media/32922/6961_assaf-pinchuk-photography.jpg?anchor=center&mode=crop&width=243&height=180&rnd=134116588120000000" alt="מלון גומא 5" class="hotel-slide" loading="lazy">
+      <img src="https://media-cdn.tripadvisor.com/media/photo-s/23/fd/ae/58/isrotel-gomeh.jpg" alt="מלון גומא 6" class="hotel-slide" loading="lazy">
+      </div>
+      <button class="slider-btn slider-btn-prev" onclick="sliderPrev('goma')">&#8250;</button>
+      <button class="slider-btn slider-btn-next" onclick="sliderNext('goma')">&#8249;</button>
+      <div class="slider-dots" id="dots-goma">
+      <div class="slider-dot active" onclick="sliderGoTo('goma',0)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('goma',1)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('goma',2)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('goma',3)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('goma',4)"></div>
+      <div class="slider-dot" onclick="sliderGoTo('goma',5)"></div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:8px 0 4px 60px;max-width:1100px;margin:0 auto;direction:rtl;font-size:.7rem;letter-spacing:.15em;color:rgba(255,138,31,.6);text-transform:uppercase;">▲ מלון גומא כנרת</div>
+
+  <div class="hotel-card reveal d1" style="margin-top:16px;">
     <div class="hotel-info" style="grid-column:1/-1;">
       <div class="hotel-stars">★★★★★</div>
-      <h3 class="hotel-name">מלון גומא כנרת</h3>
-      <p class="hotel-desc">מלון נופש מודרני על שפת הכנרת, המציע חוויית אירוח איכותית, נופים מרהיבים, מתחמי פנאי ואווירה משלימה לחופשה ולחוויות משותפות.</p>
+      <h3 class="hotel-name">מלון נבל דוד + מלון גומא · כנרת</h3>
+      <p class="hotel-desc"><strong style="color:#60d4f8">מלון נבל דוד גליל ריזורט</strong> — מלון יוקרתי בצפון הכנרת, המשלב עיצוב אדריכלי מרהיב עם נופים פתוחים לכנרת, הרי הגולן והגליל. חוויית אירוח מוקפדת באווירה טבעית ושלווה.<br><br><strong style="color:#60d4f8">מלון גומא</strong> — מלון נופש מודרני על שפת הכנרת, המציע חוויית אירוח איכותית, נופים מרהיבים, מתחמי פנאי ואווירה משלימה לחופשה ולחוויות משותפות.</p>
       <div class="hotel-meta">
         <div class="hotel-meta-item"><div class="meta-val">700</div><div class="meta-lbl">משתתפים</div></div>
         <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">סבבים</div></div>
@@ -1277,7 +1343,7 @@ nav {
           <div class="day-content">
             08:30–08:00 יציאה ממשרדי החברה<br>
             11:00–08:30 נסיעה לכנרת<br>
-            15:00–11:00 אקווה כיף<br>
+            15:00–11:00 מסיבת בריכה<br>
             19:30–15:00 צ׳ק-אין וזמן חופשי<br>
             20:30–19:30 ארוחת ערב במסעדת המלון<br>
             00:00–20:30 אירוע ערב באמפי המלון
@@ -1287,7 +1353,7 @@ nav {
           <div class="day-label">יום 2</div>
           <div class="day-content">
             10:00–07:30 ארוחת בוקר במלון וצ׳ק-אאוט<br>
-            14:00–10:00 מסיבת בריכה<br>
+            14:00–10:00 חוף גיא<br>
             16:30–14:00 יציאה למשרדי החברה<br>
             16:30 הגעה משוערת
           </div>
@@ -1296,44 +1362,32 @@ nav {
     </div>
   </div>
 
-  <div class="attr-fullwidth bg-aqua">
-    <div class="attr-ov"></div>
-    <div class="particles-layer" id="pl-aqua"></div>
-    <div class="attr-info-block">
-      <span class="attr-lbl">כנרת · יום 1 · 15:00–11:00</span>
-      <h2 class="attr-h-new" style="color:#7fffef">אקווה כיף</h2>
-      <p class="attr-desc-new">חוויה קלילה, קייצית ומלאת אדרנלין על המים. המשתתפים יהנו ממתחם מעוצב הכולל פינות זולה, ריהוט אלטרנטיבי ומתחם VIP מפנק. לאורך הפעילות יעמדו לרשות המשתתפים סאפים לחוויה דינמית ומהנה. השילוב בין פעילות, רוגע ואווירה יוצר חוויה מגבשת ובלתי נשכחת.</p>
-    </div>
-    <div class="attr-hero-img-wrap">
-      <img src="firefly_images/aqua_kef.png" alt="כנרת · יום 1 · 15:00–11:00" class="attr-hero-img">
-      <div class="attr-top-overlay"></div>
-      <div class="attr-bottom-fade"></div>
-    </div>
-  </div>
-
-  <div class="attr-fullwidth bg-amphi">
-    <div class="attr-ov"></div>
-    <div class="particles-layer" id="pl-amphi"></div>
-    <div class="attr-info-block">
-      <span class="attr-lbl">כנרת · יום 1 · 00:00–20:30</span>
-      <h2 class="attr-h-new" style="color:#f4a84a">אירוע ערב — אמפי המלון</h2>
-      <p class="attr-desc-new">אירוע ערב ייחודי המשלב עיצוב מוקפד, תאורה ואווירה עוטפת. במהלך הערב ייהנו המשתתפים ממופע מרכזי סוחף ומדויק, המותאם לקונספט האירוע ויוצר רגעי שיא מרגשים.</p>
-    </div>
-    <div class="attr-hero-img-wrap">
-      <img src="firefly_images/amphi.png" alt="אירוע ערב אמפי" class="attr-hero-img">
-      <div class="attr-top-overlay"></div>
-      <div class="attr-bottom-fade"></div>
-    </div>
-  </div>
+  <div class="attr-fullwidth bg-pool">
     <div class="attr-ov"></div>
     <div class="particles-layer" id="pl-pool"></div>
     <div class="attr-info-block">
-      <span class="attr-lbl">כנרת · יום 2 · 14:00–10:00</span>
+      <span class="attr-lbl">כנרת · יום 1 · 15:00–11:00</span>
       <h2 class="attr-h-new" style="color:#60d4f8">מסיבת בריכה</h2>
       <p class="attr-desc-new">חוויה קיצית, אנרגטית ומשחררת באווירה יוקרתית. המתחם יעוצב סביב הבריכה עם מוזיקה חיה שיוצרת וייב מסיבתי לאורך כל האירוע.</p>
     </div>
 
     <div style="display:flex;justify-content:center;gap:24px;padding:28px 60px 0;direction:rtl;flex-wrap:wrap;">
+      <div style="text-align:center;width:220px;flex-shrink:0;">
+        <div style="width:220px;height:220px;border-radius:20px;overflow:hidden;border:1px solid rgba(96,212,248,.3);box-shadow:0 0 20px rgba(96,212,248,.15);">
+          <img src="https://ynet-pic1.yit.co.il/cdn-cgi/image/f=auto,w=740,q=75/picserver6/crop_images/2026/02/18/HkiLdRM00bx/HkiLdRM00bx_0_81_1067_601_0_x-large.jpg"
+               alt="אושר כהן"
+               style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+        </div>
+        <p style="font-size:1.1rem;font-weight:700;color:#60d4f8;margin-top:12px;">אושר כהן</p>
+      </div>
+      <div style="text-align:center;width:220px;flex-shrink:0;">
+        <div style="width:220px;height:220px;border-radius:20px;overflow:hidden;border:1px solid rgba(96,212,248,.3);box-shadow:0 0 20px rgba(96,212,248,.15);">
+          <img src="https://ynet-pic1.yit.co.il/cdn-cgi/image/f=auto,w=740,q=75/picserver5/crop_images/2021/11/21/B1BNy00ww00K/B1BNy00ww00K_0_0_2667_2000_0_xx-large.jpg"
+               alt="רן דנקר"
+               style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+        </div>
+        <p style="font-size:1.1rem;font-weight:700;color:#60d4f8;margin-top:12px;">רן דנקר</p>
+      </div>
       <div style="text-align:center;width:220px;flex-shrink:0;">
         <div style="width:220px;height:220px;border-radius:20px;overflow:hidden;border:1px solid rgba(96,212,248,.3);box-shadow:0 0 20px rgba(96,212,248,.15);">
           <img src="https://img.mako.co.il/2024/07/03/musician_0307_autoOrient_i.jpg"
@@ -1361,6 +1415,36 @@ nav {
     </div>
     <div class="attr-hero-img-wrap">
       <img src="firefly_images/pool_party.png" alt="מסיבת בריכה" class="attr-hero-img">
+      <div class="attr-top-overlay"></div>
+      <div class="attr-bottom-fade"></div>
+    </div>
+  </div>
+
+  <div class="attr-fullwidth bg-amphi">
+    <div class="attr-ov"></div>
+    <div class="particles-layer" id="pl-amphi"></div>
+    <div class="attr-info-block">
+      <span class="attr-lbl">כנרת · יום 1 · 00:00–20:30</span>
+      <h2 class="attr-h-new" style="color:#f4a84a">אירוע ערב — אמפי המלון</h2>
+      <p class="attr-desc-new">אירוע ערב ייחודי המשלב עיצוב מוקפד, תאורה ואווירה עוטפת. במהלך הערב ייהנו המשתתפים ממופע מרכזי סוחף ומדויק, המותאם לקונספט האירוע ויוצר רגעי שיא מרגשים.</p>
+    </div>
+    <div class="attr-hero-img-wrap">
+      <img src="firefly_images/amphi.png" alt="אירוע ערב אמפי" class="attr-hero-img">
+      <div class="attr-top-overlay"></div>
+      <div class="attr-bottom-fade"></div>
+    </div>
+  </div>
+
+  <div class="attr-fullwidth bg-aqua">
+    <div class="attr-ov"></div>
+    <div class="particles-layer" id="pl-aqua"></div>
+    <div class="attr-info-block">
+      <span class="attr-lbl">כנרת · יום 2 · 14:00–10:00</span>
+      <h2 class="attr-h-new" style="color:#7fffef">חוף גיא</h2>
+      <p class="attr-desc-new">חוויה קיצית מלאה באקשן על שפת הכנרת. המשתתפים ייהנו ממתחם חוף פרטי וממותג, פעילויות מים, פינות ישיבה מוצלות ואווירת נופש מושלמת מול הנוף. לאורך הפעילות יעמדו לרשות המשתתפים מתחמי צ׳יל, מוזיקה טובה ואטרקציות מגוונות, המשלבות בין אנרגיה, גיבוש והנאה באווירה בלתי נשכחת.</p>
+    </div>
+    <div class="attr-hero-img-wrap">
+      <img src="firefly_images/aqua_kef.png" alt="כנרת · יום 2 · 14:00–10:00" class="attr-hero-img">
       <div class="attr-top-overlay"></div>
       <div class="attr-bottom-fade"></div>
     </div>
@@ -1524,6 +1608,160 @@ nav {
   </div>
 
 </div><!-- /location-wrap dead sea -->
+
+<!-- ══════════════════════════════════════════
+     LOCATION 04 — קפריסין (OVERSEAS)
+══════════════════════════════════════════ -->
+<div class="location-wrap cyprus-wrap" id="cyprus">
+  <div class="location-header">
+    <div class="intl-badge reveal">✈ אופציית חו״ל · INTERNATIONAL ESCAPE</div>
+    <p class="location-number reveal" style="color:#7fffe6;">לוקיישן 04 · קפריסין</p>
+    <h2 class="location-title reveal d1"><span class="cyprus-title-grad">קפריסין</span></h2>
+    <div class="location-divider reveal d2">
+      <div class="ff-stripes"><div class="ff-stripe" style="width:40px;background:linear-gradient(90deg,#19e3c4,#ffd27f);"></div><div class="ff-stripe" style="width:22px;background:linear-gradient(90deg,#19e3c4,#ffd27f);"></div><div class="ff-stripe" style="width:10px;background:linear-gradient(90deg,#19e3c4,#ffd27f);"></div></div>
+      <span style="font-size:.7rem;letter-spacing:.4em;color:rgba(127,255,230,.5);text-transform:uppercase;">Mediterranean Escape · Limassol</span>
+      <div class="ff-stripes ff-stripe-r"><div class="ff-stripe" style="width:10px;background:linear-gradient(90deg,#ffd27f,#19e3c4);"></div><div class="ff-stripe" style="width:22px;background:linear-gradient(90deg,#ffd27f,#19e3c4);"></div><div class="ff-stripe" style="width:40px;background:linear-gradient(90deg,#ffd27f,#19e3c4);"></div></div>
+    </div>
+    <p class="location-intro reveal d3">סייקל בחו״ל על חופי הים התיכון בלימסול — שמש, ים ומלונות יוקרה. שלושה ימים של חופשה אמיתית, פעילויות ייחודיות ואירועי ערב סוחפים, במרחק טיסה קצרה מהארץ.</p>
+  </div>
+
+  <!-- Hotel 1 -->
+  <div class="hotel-card reveal">
+    <div class="hotel-img-placeholder">
+      <div class="ph-icon">🏨</div>
+      St. Raphael Resort · תמונות יתווספו
+    </div>
+    <div class="hotel-info">
+      <div class="hotel-stars">★★★★★</div>
+      <h3 class="hotel-name">St. Raphael Resort</h3>
+      <p class="hotel-desc">מלון נופש יוקרתי 5 כוכבים על חוף הים בלימסול, הכולל מרינה פרטית, חופים, בריכות ומתחמי אירוח מרהיבים — יעד מושלם לאירוע חברה בחו״ל.</p>
+    </div>
+  </div>
+
+  <!-- Hotel 2 -->
+  <div class="hotel-card reveal d1" style="margin-top:20px;">
+    <div class="hotel-img-placeholder">
+      <div class="ph-icon">🏨</div>
+      City of Dreams Mediterranean · תמונות יתווספו
+    </div>
+    <div class="hotel-info">
+      <div class="hotel-stars">★★★★★</div>
+      <h3 class="hotel-name">City of Dreams Mediterranean</h3>
+      <p class="hotel-desc">אתר נופש ופנאי חדש ויוקרתי בלימסול, המשלב מלון מפואר, בריכות, מסעדות שף ואטרקציות ברמה בינלאומית — חוויית אירוח ברמה הגבוהה ביותר.</p>
+    </div>
+  </div>
+
+  <!-- Meta strip -->
+  <div class="hotel-card reveal d2" style="margin-top:20px;">
+    <div class="hotel-info" style="grid-column:1/-1;">
+      <div class="hotel-meta">
+        <div class="hotel-meta-item"><div class="meta-val">750</div><div class="meta-lbl">משתתפים</div></div>
+        <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">סבבים</div></div>
+        <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">לילות</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cyprus schedule -->
+  <div class="schedule-strip reveal d2">
+    <div class="schedule-strip-inner">
+      <div class="schedule-strip-title">לוז האירוע · קפריסין</div>
+      <div class="schedule-days">
+        <div class="schedule-day">
+          <div class="day-label">יום 1</div>
+          <div class="day-content">
+            05:00 הגעה לשדה התעופה<br>
+            09:30–08:00 טיסה לקפריסין<br>
+            10:00 העברות למלון<br>
+            16:00–12:00 מסיבת בריכה כולל פעילות ימית וארוחת צהריים<br>
+            19:30–16:00 זמן חופשי<br>
+            20:30–19:30 ארוחת ערב במסעדת המלון<br>
+            21:00 אירוע ערב · מופע מרכזי ודיג׳יי
+          </div>
+        </div>
+        <div class="schedule-day">
+          <div class="day-label">יום 2</div>
+          <div class="day-content">
+            08:00 ארוחת בוקר<br>
+            09:30 יציאה לפעילות כוכב<br>
+            12:30 ארוחת צהריים באזור הרי הטרודוס<br>
+            19:30 ארוחת ערב במסעדת המלון<br>
+            02:00–21:00 מסיבה במועדון
+          </div>
+        </div>
+        <div class="schedule-day">
+          <div class="day-label">יום 3</div>
+          <div class="day-content">
+            08:00 ארוחת בוקר<br>
+            09:30 קניון<br>
+            14:00 ארוחת צהריים<br>
+            15:00 נסיעה לשדה התעופה
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE: אירוע ערב -->
+  <div class="attr-fullwidth" style="background:linear-gradient(160deg,#02110f,#06231f 30%,#0a2e28 55%,#05201b 80%,#02110f);">
+    <div class="attr-ov" style="background:radial-gradient(ellipse at 50% 30%,rgba(0,200,170,.25),transparent 55%),radial-gradient(ellipse at 70% 20%,rgba(255,196,84,.12),transparent 50%);"></div>
+    <div class="attr-info-block">
+      <span class="attr-lbl">קפריסין · יום 1 · 21:00</span>
+      <h2 class="attr-h-new" style="background:linear-gradient(90deg,#19e3c4,#ffd27f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">אירוע ערב — מופע מרכזי ודיג׳יי</h2>
+      <p class="attr-desc-new">ערב פתיחה סוחף על חוף הים: מופע מרכזי של אמן מוביל ומסיבת דיג׳יי תחת כיפת השמיים. <strong style="color:#7fffe6">אותם אמנים שהוצעו בארץ</strong> — ראו את מגוון ההפקות המוזיקליות בסקשן Live Shows.</p>
+    </div>
+    <div class="attr-img-placeholder" style="aspect-ratio:21/9;margin:8px 60px 60px;border-radius:18px;border-color:rgba(0,200,180,.25);">
+      <div class="ph-icon">🎤</div>
+      שקף אירוע ערב · תמונה תיווצר ותוטמע
+    </div>
+  </div>
+
+  <!-- SLIDE: פעילות כוכב -->
+  <div class="attr-fullwidth" style="background:linear-gradient(160deg,#0d0a02,#1c1606 30%,#2a2008 55%,#1a1404 80%,#0d0a02);">
+    <div class="attr-ov" style="background:radial-gradient(ellipse at 40% 50%,rgba(255,196,84,.2),transparent 55%),radial-gradient(ellipse at 70% 20%,rgba(0,200,170,.1),transparent 50%);"></div>
+    <div class="attr-info-block">
+      <span class="attr-lbl">קפריסין · יום 2 · 09:30</span>
+      <h2 class="attr-h-new" style="background:linear-gradient(90deg,#ffd27f,#19e3c4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">פעילות כוכב</h2>
+      <p class="attr-desc-new">יום של הרפתקה וחוויה באזור הרי הטרודוס — שילוב של אקשן, טעמים ואווירה, עם ארוחת צהריים בלב הטבע.</p>
+    </div>
+    <div class="cyprus-activity-grid reveal">
+      <div class="cyprus-activity-card">
+        <div class="ca-icon">🚙</div>
+        <h4>טיול ג׳יפים</h4>
+        <p>חוויית שטח אדרנלינית בנופי הרי הטרודוס, דרך כפרים ציוריים ונופים עוצרי נשימה.</p>
+      </div>
+      <div class="cyprus-activity-card">
+        <div class="ca-icon">🍳</div>
+        <h4>סדנת בישול</h4>
+        <p>סדנת בישול חווייתית עם טעמים מקומיים — חוויה קולינרית מגבשת ומהנה.</p>
+      </div>
+      <div class="cyprus-activity-card">
+        <div class="ca-icon">🍸</div>
+        <h4>סדנת קוקטיילים</h4>
+        <p>לומדים להכין קוקטיילים בהדרכת מומחים, באווירה קלילה ומשוחררת.</p>
+      </div>
+    </div>
+    <div class="attr-img-placeholder" style="aspect-ratio:21/9;margin:28px 60px 60px;border-radius:18px;border-color:rgba(255,196,84,.25);">
+      <div class="ph-icon">🌄</div>
+      שקף פעילות כוכב · תמונה תיווצר ותוטמע
+    </div>
+  </div>
+
+  <!-- SLIDE: LOOK & FEEL -->
+  <div class="attr-fullwidth" style="background:linear-gradient(160deg,#02110f,#071f1c 35%,#03130f 100%);">
+    <div class="attr-ov" style="background:radial-gradient(ellipse at 50% 40%,rgba(0,200,180,.18),transparent 55%),radial-gradient(ellipse at 30% 80%,rgba(255,196,84,.1),transparent 50%);"></div>
+    <div class="attr-info-block">
+      <span class="attr-lbl">קפריסין · אווירה ועיצוב</span>
+      <h2 class="attr-h-new"><span class="cyprus-title-grad">LOOK &amp; FEEL</span></h2>
+      <p class="attr-desc-new">שפה ויזואלית של ים תיכון קייצי — טורקיז, זהב וחול, אור טבעי ואווירת חופש. לוח השראה שמגדיר את המראה והתחושה של האירוע בקפריסין.</p>
+    </div>
+    <div class="attr-img-placeholder" style="aspect-ratio:21/9;margin:8px 60px 70px;border-radius:18px;border-color:rgba(0,200,180,.25);">
+      <div class="ph-icon">🎨</div>
+      שקף LOOK &amp; FEEL · תמונה תיווצר ותוטמע
+    </div>
+  </div>
+
+</div><!-- /location-wrap cyprus -->
 
 <!-- ══════════════════════════════════════════
      ARTISTS
@@ -1853,6 +2091,7 @@ function sliderAutoPlay(id) {
 
 window.addEventListener('load', () => {
   sliderInit('malkat', 5);
+  sliderInit('goma', 6);
   sliderInit('nevo', 7);
   sliderInit('naga', 8);
   sliderInit('kineret', 6);
