@@ -44,6 +44,11 @@ body { background:#040814; color:#eef7ff; font-family:'Rubik',sans-serif; cursor
 #hero3d.ready{opacity:1;}
 #hero > *:not(#hero3d){position:relative;z-index:1;}
 
+/* ── FINALE: ignition field (WebGL) ── */
+#finale3d{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
+#finale3d.ready{opacity:1;}
+#closing > *:not(#finale3d){position:relative;z-index:1;}
+
 /* ── NAV ── */
 nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
@@ -365,20 +370,6 @@ nav {
   opacity:0; transition:opacity 1.1s ease;
 }
 .drone-stage #drone3d.ready{ opacity:1; }
-.drone-formations{
-  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
-  display:flex; gap:8px; z-index:4; direction:rtl; flex-wrap:wrap; justify-content:center; padding:0 12px;
-}
-.drone-formations button{
-  background:rgba(8,14,28,.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  border:1px solid rgba(120,170,255,.25); color:rgba(235,245,255,.82);
-  padding:7px 18px; border-radius:30px;
-  font-family:"Rubik",sans-serif; font-size:.85rem; cursor:pointer; transition:all .25s;
-}
-.drone-formations button.active,.drone-formations button:hover{
-  background:linear-gradient(90deg,rgba(58,166,255,.38),rgba(255,138,31,.38));
-  border-color:rgba(255,138,31,.6); color:#fff;
-}
 
 @media(max-width:768px) {
   .attr-info-block{padding:40px 24px 28px;}
@@ -1257,12 +1248,6 @@ nav {
         <div class="drone-stage">
           <img src="firefly_images/drones.png" alt="מופע רחפנים" class="drone-fallback">
           <canvas id="drone3d"></canvas>
-          <div class="drone-formations" id="droneFormations">
-            <button data-form="scatter">פיזור</button>
-            <button data-form="heart">לב</button>
-            <button data-form="logo" class="active">לוגו</button>
-            <button data-form="bird">חיה</button>
-          </div>
         </div>
       </div>
 
@@ -1982,6 +1967,7 @@ nav {
      THANK YOU
 ══════════════════════════════════════════ -->
 <section id="closing">
+  <canvas id="finale3d"></canvas>
   <div class="closing-stripes reveal">
     <div class="ff-stripes">
       <div class="ff-stripe" style="width:14px"></div>
@@ -2495,7 +2481,7 @@ import * as THREE from 'three';
 })();
 </script>
 
-<!-- ── DRONE SHOW 3D CHOREOGRAPHY (Three.js) — formations morph ── -->
+<!-- ── DRONE STAGE: floating 3D light scatter (Three.js) ── -->
 <script type="module">
 import * as THREE from 'three';
 (function(){
@@ -2510,91 +2496,23 @@ import * as THREE from 'three';
   renderer.setClearColor(0x000000, 0);
 
   const isMobile = matchMedia('(max-width:860px)').matches;
-  const COUNT = isMobile ? 150 : 240;
-  const VIEWW = 112, VIEWH = 70;
+  const COUNT = isMobile ? 170 : 280;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(55, VIEWW/VIEWH, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(55, 1.6, 0.1, 1000);
   camera.position.set(0, 0, 94);
 
-  // ── shape sampling via an offscreen 2D canvas ──
-  const SW = 248, SH = 155;
-  const sc = document.createElement('canvas'); sc.width = SW; sc.height = SH;
-  const sg = sc.getContext('2d', { willReadFrequently:true });
-
-  function samplePixels(){
-    const d = sg.getImageData(0,0,SW,SH).data, pts = [];
-    for (let y=0;y<SH;y+=1) for (let x=0;x<SW;x+=1){
-      if (d[(y*SW+x)*4+3] > 50) pts.push([x,y]);
-    }
-    return pts;
-  }
-  function targetsFromPixels(pts){
-    const o = new Float32Array(COUNT*3);
-    if (!pts.length) return scatterTargets();
-    for (let i=0;i<COUNT;i++){
-      const p = pts[(Math.random()*pts.length)|0];
-      o[i*3]   = (p[0]/SW - 0.5) * VIEWW;
-      o[i*3+1] = -(p[1]/SH - 0.5) * VIEWH;
-      o[i*3+2] = (Math.random()*2-1) * 9;
-    }
-    return o;
-  }
-  function scatterTargets(){
-    const o = new Float32Array(COUNT*3);
-    for (let i=0;i<COUNT;i++){ o[i*3]=(Math.random()*2-1)*64; o[i*3+1]=(Math.random()*2-1)*40; o[i*3+2]=(Math.random()*2-1)*34; }
-    return o;
-  }
-  function drawHeart(){
-    sg.clearRect(0,0,SW,SH); sg.save(); sg.translate(SW/2, SH*0.46);
-    const s = SH*0.024; sg.scale(s,s); sg.beginPath();
-    for (let t=0;t<=Math.PI*2;t+=0.02){
-      const x=16*Math.pow(Math.sin(t),3);
-      const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
-      t===0?sg.moveTo(x,y):sg.lineTo(x,y);
-    }
-    sg.closePath(); sg.fillStyle='#fff'; sg.fill(); sg.restore();
-  }
-  function drawButterfly(){
-    sg.clearRect(0,0,SW,SH); sg.fillStyle='#fff';
-    sg.save(); sg.translate(SW/2, SH/2);
-    sg.beginPath(); sg.ellipse(0,0,3.5,28,0,0,Math.PI*2); sg.fill();          // body
-    const wing=(dx,dy,rx,ry,rot)=>{ sg.save(); sg.translate(dx,dy); sg.rotate(rot); sg.beginPath(); sg.ellipse(0,0,rx,ry,0,0,Math.PI*2); sg.fill(); sg.restore(); };
-    wing(-28,-14,26,17,-0.5); wing(28,-14,26,17,0.5);                          // upper wings
-    wing(-24,18,19,13,0.55);  wing(24,18,19,13,-0.55);                          // lower wings
-    sg.restore();
-  }
-
-  // formations
-  const forms = {
-    scatter: scatterTargets(),
-    heart:   (drawHeart(), targetsFromPixels(samplePixels())),
-    bird:    (drawButterfly(), targetsFromPixels(samplePixels())),
-    logo:    null
-  };
-  // FIREFLY emblem from the real logo PNG
-  const logoImg = new Image();
-  logoImg.onload = () => {
-    sg.clearRect(0,0,SW,SH);
-    const ar = logoImg.width/logoImg.height; let dw = SW*0.94, dh = dw/ar;
-    if (dh > SH*0.94){ dh = SH*0.94; dw = dh*ar; }
-    sg.drawImage(logoImg, (SW-dw)/2, (SH-dh)/2, dw, dh);
-    forms.logo = targetsFromPixels(samplePixels());
-    if (current === 'logo') setForm('logo', true);
-  };
-  logoImg.src = 'firefly_images/firefly_shlomo_logo.png';
-
-  // ── drones (points) ──
-  const cur = scatterTargets();                 // start scattered, morph in
-  let tgt = forms.logo || forms.heart;
-  const positions = new Float32Array(cur);
-  const colors = new Float32Array(COUNT*3);
-  const phase  = new Float32Array(COUNT);
+  // ── floating light scatter ──
+  const BX = 72, BY = 45, BZ = 40;   // scatter box half-extents
+  const positions = new Float32Array(COUNT*3);
+  const colors    = new Float32Array(COUNT*3);
+  const vel       = new Float32Array(COUNT*3);
   const PAL = [ [0.12,0.76,1.0], [1.0,0.54,0.12], [0.49,0.30,1.0] ];
   for (let i=0;i<COUNT;i++){
+    positions[i*3]=(Math.random()*2-1)*BX; positions[i*3+1]=(Math.random()*2-1)*BY; positions[i*3+2]=(Math.random()*2-1)*BZ;
+    vel[i*3]=(Math.random()*2-1)*0.09; vel[i*3+1]=(Math.random()*2-1)*0.09; vel[i*3+2]=(Math.random()*2-1)*0.07;
     const c = PAL[(Math.random()<0.5)?0:(Math.random()<0.74)?1:2];
     colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
-    phase[i] = Math.random()*Math.PI*2;
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -2605,10 +2523,10 @@ import * as THREE from 'three';
     const g=c.getContext('2d'), rg=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
     rg.addColorStop(0,'rgba(255,255,255,1)'); rg.addColorStop(0.3,'rgba(255,255,255,0.5)'); rg.addColorStop(1,'rgba(255,255,255,0)');
     g.fillStyle=rg; g.fillRect(0,0,s,s);
-    const t=new THREE.CanvasTexture(c); return t;
+    return new THREE.CanvasTexture(c);
   })();
   const mat = new THREE.ShaderMaterial({
-    uniforms: { uTex:{ value: tex }, uSize:{ value: isMobile ? 20 : 14 }, uPixel:{ value: 1 } },
+    uniforms: { uTex:{ value: tex }, uSize:{ value: isMobile ? 18 : 13 }, uPixel:{ value: 1 } },
     vertexShader: `
       attribute vec3 aColor; uniform float uSize, uPixel; varying vec3 vC;
       void main(){
@@ -2623,31 +2541,7 @@ import * as THREE from 'three';
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
   });
   const group = new THREE.Group();
-  const points = new THREE.Points(geo, mat);
-  group.add(points); scene.add(group);
-
-  // ── formation control: buttons + auto-cycle ──
-  let current = 'logo';
-  const order = ['logo','heart','bird','scatter'];
-  const btns = [...document.querySelectorAll('#droneFormations button')];
-  function setForm(name, silent){
-    current = name;
-    const t = forms[name]; if (t) tgt = t;
-    btns.forEach(b => b.classList.toggle('active', b.dataset.form === name));
-    if (!silent) cycleAt = 0; // reset auto-cycle after manual pick
-  }
-  btns.forEach(b => b.addEventListener('click', () => setForm(b.dataset.form)));
-
-  let cycleAt = 0;
-  function autoCycle(t){
-    if (t - cycleAt > 5){
-      cycleAt = t;
-      const i = order.indexOf(current);
-      let next = order[(i+1) % order.length];
-      if (next === 'logo' && !forms.logo) next = 'heart';
-      setForm(next, true);
-    }
-  }
+  group.add(new THREE.Points(geo, mat)); scene.add(group);
 
   function resize(){
     const w = stage.clientWidth, h = stage.clientHeight; if (!w||!h) return;
@@ -2668,27 +2562,153 @@ import * as THREE from 'three';
   let visible = false;
   new IntersectionObserver(es=>{ visible = es[0].isIntersecting; }, { threshold:0 }).observe(stage);
 
-  const t0 = performance.now(); cycleAt = 0;
   cvs.classList.add('ready');
   const pos = geo.attributes.position.array;
+  let last = performance.now();
+  function loop(now){
+    requestAnimationFrame(loop);
+    if (!visible || document.hidden || cvs.offsetParent === null){ last = now; return; }
+    const dt = Math.min(2.5, (now - last)/16.67); last = now;
+    for (let i=0;i<COUNT;i++){
+      const k=i*3;
+      pos[k]+=vel[k]*dt; pos[k+1]+=vel[k+1]*dt; pos[k+2]+=vel[k+2]*dt;
+      if (pos[k]>BX || pos[k]<-BX) vel[k]*=-1;
+      if (pos[k+1]>BY || pos[k+1]<-BY) vel[k+1]*=-1;
+      if (pos[k+2]>BZ || pos[k+2]<-BZ) vel[k+2]*=-1;
+    }
+    geo.attributes.position.needsUpdate = true;
+    const t = now/1000;
+    group.rotation.y = Math.sin(t*0.14) * 0.30;
+    cx += (mx-cx)*0.05; cy += (my-cy)*0.05;
+    camera.position.x = cx*26; camera.position.y = -cy*16; camera.lookAt(0,0,0);
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+
+<!-- ── FINALE: ignition field — points light up forming the FIREFLY emblem ── -->
+<script type="module">
+import * as THREE from 'three';
+(function(){
+  const cvs = document.getElementById('finale3d');
+  const sec = document.getElementById('closing');
+  if (!cvs || !sec) return;
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha:true, antialias:true, powerPreference:'high-performance' }); }
+  catch(e){ return; }
+  renderer.setClearColor(0x000000, 0);
+
+  const isMobile = matchMedia('(max-width:860px)').matches;
+  const COUNT = isMobile ? 260 : 460;
+  const LH = 70, LW = 70;          // emblem world span
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, 1.8, 0.1, 1000);
+  camera.position.set(0, 0, 94);
+
+  const tex = (() => {
+    const s=64,c=document.createElement('canvas'); c.width=c.height=s;
+    const g=c.getContext('2d'), rg=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
+    rg.addColorStop(0,'rgba(255,255,255,1)'); rg.addColorStop(0.3,'rgba(255,255,255,0.5)'); rg.addColorStop(1,'rgba(255,255,255,0)');
+    g.fillStyle=rg; g.fillRect(0,0,s,s);
+    return new THREE.CanvasTexture(c);
+  })();
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms: { uTex:{value:tex}, uTime:{value:0}, uProgress:{value:0}, uSize:{value:isMobile?17:12}, uPixel:{value:1} },
+    vertexShader: `
+      attribute vec3 aColor; attribute float aIgnite; attribute float aPhase;
+      uniform float uTime, uProgress, uSize, uPixel;
+      varying vec3 vC; varying float vB;
+      void main(){
+        vC = aColor;
+        float lit = smoothstep(aIgnite, aIgnite + 0.06, uProgress);
+        float flash = lit * (1.0 - smoothstep(aIgnite + 0.05, aIgnite + 0.18, uProgress));
+        float tw = 0.82 + 0.18*sin(uTime*2.2 + aPhase);
+        vB = lit*tw + flash*0.9;
+        vec3 p = position;
+        p.x += sin(uTime*0.6 + aPhase) * 0.7 * lit;
+        p.y += cos(uTime*0.5 + aPhase) * 0.7 * lit;
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        gl_PointSize = uSize * uPixel * (0.55 + 0.6*lit) * (300.0 / -mv.z);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `
+      uniform sampler2D uTex; varying vec3 vC; varying float vB;
+      void main(){
+        vec4 t = texture2D(uTex, gl_PointCoord);
+        gl_FragColor = vec4(vC * (0.25 + vB), t.a * (0.07 + vB));
+      }`,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+
+  const group = new THREE.Group();
+  const PAL = [ [0.12,0.76,1.0], [1.0,0.54,0.12], [0.49,0.30,1.0] ];
+
+  function buildFromPixels(pts){
+    const positions = new Float32Array(COUNT*3), colors = new Float32Array(COUNT*3),
+          ignite = new Float32Array(COUNT), phase = new Float32Array(COUNT);
+    for (let i=0;i<COUNT;i++){
+      let x, y;
+      if (pts && pts.length){ const p = pts[(Math.random()*pts.length)|0]; x=(p[0]/248-0.5)*LW; y=-(p[1]/155-0.5)*LH; }
+      else { x=(Math.random()*2-1)*LW*0.5; y=(Math.random()*2-1)*LH*0.5; }
+      positions[i*3]=x; positions[i*3+1]=y; positions[i*3+2]=(Math.random()*2-1)*7;
+      const normY = y/LH;                            // -0.5 (bottom) .. 0.5 (top)
+      ignite[i] = Math.min(0.96, (0.5 - normY)*0.72 + Math.random()*0.22);  // bottom lights first
+      phase[i] = Math.random()*Math.PI*2;
+      const c = PAL[(Math.random()<0.5)?0:(Math.random()<0.74)?1:2];
+      colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+    geo.setAttribute('aColor',  new THREE.BufferAttribute(colors,3));
+    geo.setAttribute('aIgnite', new THREE.BufferAttribute(ignite,1));
+    geo.setAttribute('aPhase',  new THREE.BufferAttribute(phase,1));
+    group.clear(); group.add(new THREE.Points(geo, mat)); scene.add(group);
+  }
+
+  // sample the FIREFLY emblem; fall back to a soft cloud until it loads
+  buildFromPixels(null);
+  const img = new Image();
+  img.onload = () => {
+    const SW=248, SH=155, c=document.createElement('canvas'); c.width=SW; c.height=SH;
+    const g=c.getContext('2d',{willReadFrequently:true});
+    const ar=img.width/img.height; let dw=SW*0.9, dh=dw/ar; if(dh>SH*0.9){dh=SH*0.9; dw=dh*ar;}
+    g.drawImage(img,(SW-dw)/2,(SH-dh)/2,dw,dh);
+    const d=g.getImageData(0,0,SW,SH).data, pts=[];
+    for(let y=0;y<SH;y++)for(let x=0;x<SW;x++) if(d[(y*SW+x)*4+3]>50) pts.push([x,y]);
+    buildFromPixels(pts);
+  };
+  img.src = 'firefly_images/firefly_shlomo_logo.png';
+
+  function resize(){
+    const w = sec.clientWidth, h = sec.clientHeight; if(!w||!h) return;
+    const pr = Math.min(window.devicePixelRatio||1, 2);
+    renderer.setPixelRatio(pr); renderer.setSize(w,h,false);
+    camera.aspect = w/h; camera.updateProjectionMatrix();
+    mat.uniforms.uPixel.value = pr;
+  }
+  resize(); addEventListener('resize', resize, { passive:true });
+
+  function progress(){
+    const r = sec.getBoundingClientRect();
+    const start = innerHeight*0.92, end = innerHeight*0.28;
+    return Math.min(1, Math.max(0, (start - r.top) / (start - end)));
+  }
+
+  let visible = false;
+  new IntersectionObserver(es=>{ visible = es[0].isIntersecting; }, { threshold:0 }).observe(sec);
+
+  cvs.classList.add('ready');
+  const t0 = performance.now();
   function loop(now){
     requestAnimationFrame(loop);
     if (!visible || document.hidden || cvs.offsetParent === null) return;
-    const t = (now - t0)/1000;
-    autoCycle(t);
-    for (let i=0;i<COUNT;i++){
-      const k=i*3;
-      cur[k]   += (tgt[k]   - cur[k]) * 0.055;
-      cur[k+1] += (tgt[k+1] - cur[k+1]) * 0.055;
-      cur[k+2] += (tgt[k+2] - cur[k+2]) * 0.055;
-      pos[k]   = cur[k]   + Math.sin(t*1.3 + phase[i]) * 0.9;       // idle hover
-      pos[k+1] = cur[k+1] + Math.cos(t*1.1 + phase[i]) * 0.9;
-      pos[k+2] = cur[k+2] + Math.sin(t*0.9 + phase[i]) * 0.9;
-    }
-    geo.attributes.position.needsUpdate = true;
-    group.rotation.y = Math.sin(t*0.16) * 0.32;
-    cx += (mx-cx)*0.05; cy += (my-cy)*0.05;
-    camera.position.x = cx*26; camera.position.y = -cy*16; camera.lookAt(0,0,0);
+    mat.uniforms.uTime.value = (now - t0)/1000;
+    mat.uniforms.uProgress.value += (progress() - mat.uniforms.uProgress.value) * 0.08;
     renderer.render(scene, camera);
   }
   requestAnimationFrame(loop);
