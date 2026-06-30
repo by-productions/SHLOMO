@@ -2598,7 +2598,7 @@ import * as THREE from 'three';
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+  geo.setAttribute('aColor',   new THREE.BufferAttribute(colors, 3));
 
   const tex = (() => {
     const s=64,c=document.createElement('canvas'); c.width=c.height=s;
@@ -2607,9 +2607,20 @@ import * as THREE from 'three';
     g.fillStyle=rg; g.fillRect(0,0,s,s);
     const t=new THREE.CanvasTexture(c); return t;
   })();
-  const mat = new THREE.PointsMaterial({
-    size: isMobile ? 3.4 : 2.8, map: tex, vertexColors: true,
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true
+  const mat = new THREE.ShaderMaterial({
+    uniforms: { uTex:{ value: tex }, uSize:{ value: isMobile ? 20 : 14 }, uPixel:{ value: 1 } },
+    vertexShader: `
+      attribute vec3 aColor; uniform float uSize, uPixel; varying vec3 vC;
+      void main(){
+        vC = aColor;
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = uSize * uPixel * (300.0 / -mv.z);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `
+      uniform sampler2D uTex; varying vec3 vC;
+      void main(){ vec4 t = texture2D(uTex, gl_PointCoord); gl_FragColor = vec4(vC, t.a); }`,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
   });
   const group = new THREE.Group();
   const points = new THREE.Points(geo, mat);
@@ -2640,9 +2651,11 @@ import * as THREE from 'three';
 
   function resize(){
     const w = stage.clientWidth, h = stage.clientHeight; if (!w||!h) return;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+    const pr = Math.min(window.devicePixelRatio||1, 2);
+    renderer.setPixelRatio(pr);
     renderer.setSize(w, h, false);
     camera.aspect = w/h; camera.updateProjectionMatrix();
+    mat.uniforms.uPixel.value = pr;
   }
   resize(); addEventListener('resize', resize, { passive:true });
 
