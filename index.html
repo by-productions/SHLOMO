@@ -15,6 +15,29 @@ body { background:#040814; color:#eef7ff; font-family:'Rubik',sans-serif; cursor
 #cursor-trail { position:fixed; width:5px; height:5px; background:rgba(30,194,255,.55); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .13s ease-out; box-shadow:0 0 8px 3px rgba(30,194,255,.35); }
 #canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; background:transparent; will-change:transform; transform:translateZ(0); }
 
+/* ── ATMOSPHERE: drifting fog + bloom (cinematic depth) ── */
+.atmosphere{position:fixed;inset:-12%;z-index:0;pointer-events:none;will-change:transform,opacity;
+  background:
+    radial-gradient(38% 34% at 22% 26%,rgba(30,194,255,.11),transparent 60%),
+    radial-gradient(44% 40% at 78% 30%,rgba(255,138,31,.10),transparent 62%),
+    radial-gradient(52% 46% at 50% 80%,rgba(124,77,255,.085),transparent 64%);
+  filter:blur(40px);
+  animation:fogDrift 28s ease-in-out infinite alternate;}
+.atmosphere.layer2{
+  background:
+    radial-gradient(40% 36% at 70% 20%,rgba(30,194,255,.07),transparent 60%),
+    radial-gradient(46% 42% at 28% 72%,rgba(255,138,31,.07),transparent 62%);
+  animation:fogDrift2 38s ease-in-out infinite alternate;mix-blend-mode:screen;opacity:.85;}
+@keyframes fogDrift{
+  0%{transform:translate3d(-3%,-2%,0) scale(1.06);}
+  100%{transform:translate3d(4%,3%,0) scale(1.16);}}
+@keyframes fogDrift2{
+  0%{transform:translate3d(3%,2%,0) scale(1.12);}
+  100%{transform:translate3d(-4%,-3%,0) scale(1.0);}}
+.vignette{position:fixed;inset:0;z-index:150;pointer-events:none;
+  background:radial-gradient(125% 95% at 50% 42%,transparent 58%,rgba(2,4,10,.5) 100%);}
+@media(prefers-reduced-motion:reduce){.atmosphere{animation:none;}}
+
 /* ── NAV ── */
 nav {
   position:fixed; top:0; left:0; right:0; z-index:200;
@@ -809,7 +832,10 @@ nav {
 </head>
 <body>
 
+<div class="atmosphere"></div>
+<div class="atmosphere layer2"></div>
 <canvas id="canvas"></canvas>
+<div class="vignette"></div>
 <div id="cursor"></div>
 <div id="cursor-trail"></div>
 
@@ -1327,7 +1353,7 @@ nav {
       <h3 class="hotel-name">מלון נבל דוד + מלון גומא · כנרת</h3>
       <p class="hotel-desc"><strong style="color:#60d4f8">מלון נבל דוד גליל ריזורט</strong> — מלון יוקרתי בצפון הכנרת, המשלב עיצוב אדריכלי מרהיב עם נופים פתוחים לכנרת, הרי הגולן והגליל. חוויית אירוח מוקפדת באווירה טבעית ושלווה.<br><br><strong style="color:#60d4f8">מלון גומא</strong> — מלון נופש מודרני על שפת הכנרת, המציע חוויית אירוח איכותית, נופים מרהיבים, מתחמי פנאי ואווירה משלימה לחופשה ולחוויות משותפות.</p>
       <div class="hotel-meta">
-        <div class="hotel-meta-item"><div class="meta-val">700</div><div class="meta-lbl">משתתפים</div></div>
+        <div class="hotel-meta-item"><div class="meta-val">750</div><div class="meta-lbl">משתתפים</div></div>
         <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">סבבים</div></div>
         <div class="hotel-meta-item"><div class="meta-val">1</div><div class="meta-lbl">לילות</div></div>
       </div>
@@ -1511,7 +1537,7 @@ nav {
       <h3 class="hotel-name">מלון נבו + מלון נגה · ים המלח</h3>
       <p class="hotel-desc"><strong style="color:#64b5f6">מלון נבו</strong> — מציע שילוב של שלווה מול הנופים המרהיבים של ים המלח. יעד אידיאלי לרגיעה, בריאות והתחדשות מול הים הנמוך בעולם.<br><br><strong style="color:#64b5f6">מלון נגה</strong> — מציע חוויית אירוח נינוחה ונעימה מול נופי המדבר והים, עם שילוב של רוגע, נוחות וגישה ישירה לאחת מהחוויות הייחודיות בעולם.</p>
       <div class="hotel-meta">
-        <div class="hotel-meta-item"><div class="meta-val">700</div><div class="meta-lbl">משתתפים</div></div>
+        <div class="hotel-meta-item"><div class="meta-val">750</div><div class="meta-lbl">משתתפים</div></div>
         <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">סבבים</div></div>
         <div class="hotel-meta-item"><div class="meta-val">1</div><div class="meta-lbl">לילות</div></div>
       </div>
@@ -1705,8 +1731,8 @@ nav {
   <div class="hotel-card reveal d2" style="margin-top:20px;">
     <div class="hotel-info" style="grid-column:1/-1;">
       <div class="hotel-meta">
-        <div class="hotel-meta-item"><div class="meta-val">750</div><div class="meta-lbl">משתתפים</div></div>
-        <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">סבבים</div></div>
+        <div class="hotel-meta-item"><div class="meta-val">500</div><div class="meta-lbl">משתתפים</div></div>
+        <div class="hotel-meta-item"><div class="meta-val">3</div><div class="meta-lbl">סבבים</div></div>
         <div class="hotel-meta-item"><div class="meta-val">2</div><div class="meta-lbl">לילות</div></div>
       </div>
     </div>
@@ -2200,13 +2226,63 @@ function snapTo(dir){
   if(!els.length) return;
   let idx = currentSnapIndex(els) + dir;
   idx = Math.max(0, Math.min(els.length-1, idx));
-  window.scrollTo({ top: Math.max(0, absTop(els[idx]) - NAV_OFFSET), behavior:'smooth' });
+  const top = Math.max(0, absTop(els[idx]) - NAV_OFFSET);
+  if (window.lenis) window.lenis.scrollTo(top);
+  else window.scrollTo({ top, behavior:'smooth' });
 }
 document.addEventListener('keydown', e=>{
   if(e.target && e.target.matches && e.target.matches('input,textarea,select')) return;
   if(e.key==='ArrowDown' || e.key==='PageDown'){ e.preventDefault(); snapTo(1); }
   else if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); snapTo(-1); }
 });
+</script>
+
+<!-- ── LENIS smooth scroll + PARALLAX depth (cinematic, light-weight) ── -->
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // ── Lenis buttery smooth scroll (graceful fallback to native if CDN fails) ──
+  let lenis = null;
+  if (!reduce && window.Lenis) {
+    document.documentElement.style.scrollBehavior = 'auto'; // hand control to Lenis
+    lenis = new Lenis({ duration: 1.15, smoothWheel: true, lerp: 0.09, wheelMultiplier: 0.9 });
+    window.lenis = lenis;
+    function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  }
+
+  // ── Parallax depth: decorative drift driven by scroll position ──
+  if (!reduce) {
+    const layers = [];
+    document.querySelectorAll('.location-title').forEach(el => layers.push({ el, speed: 0.06 }));
+    document.querySelectorAll('.rock-layer').forEach(el => layers.push({ el, speed: 0.10, base: el.style.transform || '' }));
+    const cvs = document.getElementById('canvas');
+
+    function applyParallax(scrollY){
+      const vh = innerHeight, mid = vh / 2;
+      for (const L of layers){
+        const r = L.el.getBoundingClientRect();
+        const offset = (r.top + r.height/2 - mid) * -L.speed;
+        L.el.style.transform = `${L.base ? L.base + ' ' : ''}translate3d(0,${offset.toFixed(1)}px,0)`;
+      }
+      if (cvs) cvs.style.transform = `translate3d(0,${(scrollY * 0.03).toFixed(1)}px,0)`;
+    }
+
+    if (lenis) {
+      lenis.on('scroll', ({ scroll }) => applyParallax(scroll));
+    } else {
+      let ticking = false;
+      addEventListener('scroll', () => {
+        if (ticking) return; ticking = true;
+        requestAnimationFrame(() => { applyParallax(scrollY); ticking = false; });
+      }, { passive: true });
+    }
+    addEventListener('resize', () => applyParallax(scrollY), { passive: true });
+    applyParallax(scrollY);
+  }
+})();
 </script>
 </body>
 </html>
