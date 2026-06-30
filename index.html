@@ -350,6 +350,36 @@ nav {
   z-index:3; pointer-events:none;
 }
 
+/* ── DRONE 3D STAGE ── */
+.drone-stage{
+  position:relative; width:100%; aspect-ratio:16/10; max-height:680px;
+  border-radius:14px; overflow:hidden;
+  background:radial-gradient(ellipse at 50% 62%,#0b0922 0%,#040218 55%,#01000a 100%);
+}
+.drone-stage .drone-fallback{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; opacity:.9;
+}
+.drone-stage #drone3d{
+  position:absolute; inset:0; width:100%; height:100%; display:block;
+  opacity:0; transition:opacity 1.1s ease;
+}
+.drone-stage #drone3d.ready{ opacity:1; }
+.drone-formations{
+  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+  display:flex; gap:8px; z-index:4; direction:rtl; flex-wrap:wrap; justify-content:center; padding:0 12px;
+}
+.drone-formations button{
+  background:rgba(8,14,28,.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(120,170,255,.25); color:rgba(235,245,255,.82);
+  padding:7px 18px; border-radius:30px;
+  font-family:"Rubik",sans-serif; font-size:.85rem; cursor:pointer; transition:all .25s;
+}
+.drone-formations button.active,.drone-formations button:hover{
+  background:linear-gradient(90deg,rgba(58,166,255,.38),rgba(255,138,31,.38));
+  border-color:rgba(255,138,31,.6); color:#fff;
+}
+
 @media(max-width:768px) {
   .attr-info-block{padding:40px 24px 28px;}
   .attr-hero-img,.attr-hero-img-placeholder{height:260px;}
@@ -1222,10 +1252,18 @@ nav {
     <!-- Images — each option has its own, LED option has flip on hover -->
     <div class="attr-hero-img-wrap">
 
-      <!-- Drones image (plain) -->
+      <!-- Drones: live 3D choreography (img stays underneath as fallback) -->
       <div id="imgDrones">
-        <img src="firefly_images/drones.png"
-             alt="מופע רחפנים" class="attr-hero-img">
+        <div class="drone-stage">
+          <img src="firefly_images/drones.png" alt="מופע רחפנים" class="drone-fallback">
+          <canvas id="drone3d"></canvas>
+          <div class="drone-formations" id="droneFormations">
+            <button data-form="scatter">פיזור</button>
+            <button data-form="heart">לב</button>
+            <button data-form="logo" class="active">לוגו</button>
+            <button data-form="bird">חיה</button>
+          </div>
+        </div>
       </div>
 
       <!-- LED flip card: front=9MKn4bQ1, back=yYFbdFCq -->
@@ -2451,6 +2489,193 @@ import * as THREE from 'three';
     camera.position.x = cx * 26;
     camera.position.y = -cy * 18;
     camera.lookAt(0, 0, -40);
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+
+<!-- ── DRONE SHOW 3D CHOREOGRAPHY (Three.js) — formations morph ── -->
+<script type="module">
+import * as THREE from 'three';
+(function(){
+  const cvs = document.getElementById('drone3d');
+  const stage = cvs && cvs.closest('.drone-stage');
+  if (!cvs || !stage) return;
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return; // fallback img stays
+
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true, powerPreference:'high-performance' }); }
+  catch(e){ return; }
+  renderer.setClearColor(0x000000, 0);
+
+  const isMobile = matchMedia('(max-width:860px)').matches;
+  const COUNT = isMobile ? 150 : 240;
+  const VIEWW = 112, VIEWH = 70;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, VIEWW/VIEWH, 0.1, 1000);
+  camera.position.set(0, 0, 94);
+
+  // ── shape sampling via an offscreen 2D canvas ──
+  const SW = 248, SH = 155;
+  const sc = document.createElement('canvas'); sc.width = SW; sc.height = SH;
+  const sg = sc.getContext('2d', { willReadFrequently:true });
+
+  function samplePixels(){
+    const d = sg.getImageData(0,0,SW,SH).data, pts = [];
+    for (let y=0;y<SH;y+=1) for (let x=0;x<SW;x+=1){
+      if (d[(y*SW+x)*4+3] > 50) pts.push([x,y]);
+    }
+    return pts;
+  }
+  function targetsFromPixels(pts){
+    const o = new Float32Array(COUNT*3);
+    if (!pts.length) return scatterTargets();
+    for (let i=0;i<COUNT;i++){
+      const p = pts[(Math.random()*pts.length)|0];
+      o[i*3]   = (p[0]/SW - 0.5) * VIEWW;
+      o[i*3+1] = -(p[1]/SH - 0.5) * VIEWH;
+      o[i*3+2] = (Math.random()*2-1) * 9;
+    }
+    return o;
+  }
+  function scatterTargets(){
+    const o = new Float32Array(COUNT*3);
+    for (let i=0;i<COUNT;i++){ o[i*3]=(Math.random()*2-1)*64; o[i*3+1]=(Math.random()*2-1)*40; o[i*3+2]=(Math.random()*2-1)*34; }
+    return o;
+  }
+  function drawHeart(){
+    sg.clearRect(0,0,SW,SH); sg.save(); sg.translate(SW/2, SH*0.46);
+    const s = SH*0.024; sg.scale(s,s); sg.beginPath();
+    for (let t=0;t<=Math.PI*2;t+=0.02){
+      const x=16*Math.pow(Math.sin(t),3);
+      const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+      t===0?sg.moveTo(x,y):sg.lineTo(x,y);
+    }
+    sg.closePath(); sg.fillStyle='#fff'; sg.fill(); sg.restore();
+  }
+  function drawButterfly(){
+    sg.clearRect(0,0,SW,SH); sg.fillStyle='#fff';
+    sg.save(); sg.translate(SW/2, SH/2);
+    sg.beginPath(); sg.ellipse(0,0,3.5,28,0,0,Math.PI*2); sg.fill();          // body
+    const wing=(dx,dy,rx,ry,rot)=>{ sg.save(); sg.translate(dx,dy); sg.rotate(rot); sg.beginPath(); sg.ellipse(0,0,rx,ry,0,0,Math.PI*2); sg.fill(); sg.restore(); };
+    wing(-28,-14,26,17,-0.5); wing(28,-14,26,17,0.5);                          // upper wings
+    wing(-24,18,19,13,0.55);  wing(24,18,19,13,-0.55);                          // lower wings
+    sg.restore();
+  }
+
+  // formations
+  const forms = {
+    scatter: scatterTargets(),
+    heart:   (drawHeart(), targetsFromPixels(samplePixels())),
+    bird:    (drawButterfly(), targetsFromPixels(samplePixels())),
+    logo:    null
+  };
+  // FIREFLY emblem from the real logo PNG
+  const logoImg = new Image();
+  logoImg.onload = () => {
+    sg.clearRect(0,0,SW,SH);
+    const ar = logoImg.width/logoImg.height; let dw = SW*0.94, dh = dw/ar;
+    if (dh > SH*0.94){ dh = SH*0.94; dw = dh*ar; }
+    sg.drawImage(logoImg, (SW-dw)/2, (SH-dh)/2, dw, dh);
+    forms.logo = targetsFromPixels(samplePixels());
+    if (current === 'logo') setForm('logo', true);
+  };
+  logoImg.src = 'firefly_images/firefly_shlomo_logo.png';
+
+  // ── drones (points) ──
+  const cur = scatterTargets();                 // start scattered, morph in
+  let tgt = forms.logo || forms.heart;
+  const positions = new Float32Array(cur);
+  const colors = new Float32Array(COUNT*3);
+  const phase  = new Float32Array(COUNT);
+  const PAL = [ [0.12,0.76,1.0], [1.0,0.54,0.12], [0.49,0.30,1.0] ];
+  for (let i=0;i<COUNT;i++){
+    const c = PAL[(Math.random()<0.5)?0:(Math.random()<0.74)?1:2];
+    colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
+    phase[i] = Math.random()*Math.PI*2;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+
+  const tex = (() => {
+    const s=64,c=document.createElement('canvas'); c.width=c.height=s;
+    const g=c.getContext('2d'), rg=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
+    rg.addColorStop(0,'rgba(255,255,255,1)'); rg.addColorStop(0.3,'rgba(255,255,255,0.5)'); rg.addColorStop(1,'rgba(255,255,255,0)');
+    g.fillStyle=rg; g.fillRect(0,0,s,s);
+    const t=new THREE.CanvasTexture(c); return t;
+  })();
+  const mat = new THREE.PointsMaterial({
+    size: isMobile ? 3.4 : 2.8, map: tex, vertexColors: true,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true
+  });
+  const group = new THREE.Group();
+  const points = new THREE.Points(geo, mat);
+  group.add(points); scene.add(group);
+
+  // ── formation control: buttons + auto-cycle ──
+  let current = 'logo';
+  const order = ['logo','heart','bird','scatter'];
+  const btns = [...document.querySelectorAll('#droneFormations button')];
+  function setForm(name, silent){
+    current = name;
+    const t = forms[name]; if (t) tgt = t;
+    btns.forEach(b => b.classList.toggle('active', b.dataset.form === name));
+    if (!silent) cycleAt = 0; // reset auto-cycle after manual pick
+  }
+  btns.forEach(b => b.addEventListener('click', () => setForm(b.dataset.form)));
+
+  let cycleAt = 0;
+  function autoCycle(t){
+    if (t - cycleAt > 5){
+      cycleAt = t;
+      const i = order.indexOf(current);
+      let next = order[(i+1) % order.length];
+      if (next === 'logo' && !forms.logo) next = 'heart';
+      setForm(next, true);
+    }
+  }
+
+  function resize(){
+    const w = stage.clientWidth, h = stage.clientHeight; if (!w||!h) return;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+    renderer.setSize(w, h, false);
+    camera.aspect = w/h; camera.updateProjectionMatrix();
+  }
+  resize(); addEventListener('resize', resize, { passive:true });
+
+  let mx=0,my=0,cx=0,cy=0;
+  stage.addEventListener('mousemove', e=>{
+    const r = stage.getBoundingClientRect();
+    mx = ((e.clientX-r.left)/r.width - 0.5); my = ((e.clientY-r.top)/r.height - 0.5);
+  }, { passive:true });
+
+  let visible = false;
+  new IntersectionObserver(es=>{ visible = es[0].isIntersecting; }, { threshold:0 }).observe(stage);
+
+  const t0 = performance.now(); cycleAt = 0;
+  cvs.classList.add('ready');
+  const pos = geo.attributes.position.array;
+  function loop(now){
+    requestAnimationFrame(loop);
+    if (!visible || document.hidden || cvs.offsetParent === null) return;
+    const t = (now - t0)/1000;
+    autoCycle(t);
+    for (let i=0;i<COUNT;i++){
+      const k=i*3;
+      cur[k]   += (tgt[k]   - cur[k]) * 0.055;
+      cur[k+1] += (tgt[k+1] - cur[k+1]) * 0.055;
+      cur[k+2] += (tgt[k+2] - cur[k+2]) * 0.055;
+      pos[k]   = cur[k]   + Math.sin(t*1.3 + phase[i]) * 0.9;       // idle hover
+      pos[k+1] = cur[k+1] + Math.cos(t*1.1 + phase[i]) * 0.9;
+      pos[k+2] = cur[k+2] + Math.sin(t*0.9 + phase[i]) * 0.9;
+    }
+    geo.attributes.position.needsUpdate = true;
+    group.rotation.y = Math.sin(t*0.16) * 0.32;
+    cx += (mx-cx)*0.05; cy += (my-cy)*0.05;
+    camera.position.x = cx*26; camera.position.y = -cy*16; camera.lookAt(0,0,0);
     renderer.render(scene, camera);
   }
   requestAnimationFrame(loop);
